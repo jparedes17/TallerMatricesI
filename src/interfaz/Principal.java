@@ -65,13 +65,6 @@ public class Principal extends javax.swing.JFrame {
         cmbOperaciones = new javax.swing.JComboBox();
         jScrollPane2 = new javax.swing.JScrollPane();
         tblTablaInicial = new javax.swing.JTable();
-        jPanel6 = new javax.swing.JPanel();
-        jPanel7 = new javax.swing.JPanel();
-        jLabel10 = new javax.swing.JLabel();
-        txtNumerodeFilas4 = new javax.swing.JTextField();
-        jLabel11 = new javax.swing.JLabel();
-        txtNumerodeColumnas4 = new javax.swing.JTextField();
-        txtResultado = new javax.swing.JTextField();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -178,7 +171,7 @@ public class Principal extends javax.swing.JFrame {
 
         jPanel1.add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(550, 170, 360, 210));
 
-        cmbOperaciones.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Cant. Num Pares", "Números Pares", "Letra C", "Diagonal Prinpal", "Letra H" }));
+        cmbOperaciones.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Diagonal Secundaria", "Triangular Superior", "Triangular Inferior", "Matriz Transpuesta", "Letra A", "Letra Z", "Letra T", "Letra V", "Letra E", "Letra F", "Letra P", "Letra I", "Letra N", "Letra Y", "Letra X" }));
         jPanel1.add(cmbOperaciones, new org.netbeans.lib.awtextra.AbsoluteConstraints(420, 250, -1, -1));
 
         tblTablaInicial.setModel(new javax.swing.table.DefaultTableModel(
@@ -192,27 +185,6 @@ public class Principal extends javax.swing.JFrame {
         jScrollPane2.setViewportView(tblTablaInicial);
 
         jPanel1.add(jScrollPane2, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 170, 360, 210));
-
-        jPanel6.setBorder(javax.swing.BorderFactory.createTitledBorder("Resultado"));
-        jPanel6.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
-
-        jPanel7.setBorder(javax.swing.BorderFactory.createTitledBorder("Datos Iniciales"));
-        jPanel7.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
-
-        jLabel10.setText("No. de Filas:");
-        jPanel7.add(jLabel10, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 20, -1, 20));
-        jPanel7.add(txtNumerodeFilas4, new org.netbeans.lib.awtextra.AbsoluteConstraints(110, 20, 30, -1));
-
-        jLabel11.setText("No. de Columnas: ");
-        jPanel7.add(jLabel11, new org.netbeans.lib.awtextra.AbsoluteConstraints(190, 20, -1, 20));
-        jPanel7.add(txtNumerodeColumnas4, new org.netbeans.lib.awtextra.AbsoluteConstraints(290, 20, 30, -1));
-
-        jPanel6.add(jPanel7, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 70, 350, 60));
-
-        txtResultado.setEditable(false);
-        jPanel6.add(txtResultado, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 20, 420, 30));
-
-        jPanel1.add(jPanel6, new org.netbeans.lib.awtextra.AbsoluteConstraints(240, 420, 480, 60));
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -234,10 +206,38 @@ public class Principal extends javax.swing.JFrame {
     private void cmdCrearActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmdCrearActionPerformed
         int nf, nc;
         DefaultTableModel tm, tm2;
-
+        if (txtNumerodeColumnas.getText().trim().isEmpty())
+        {
+          Helper.mensaje(this, "Ingrese el Numero de Columnas", 3);
+          txtNumerodeColumnas.requestFocusInWindow();
+        }
+        else if (txtNumerodeFilas.getText().trim().isEmpty()){
+            Helper.mensaje(this, "Ingrese el Numero de Filas", 3);
+            txtNumerodeFilas.requestFocusInWindow();
+        }
+        else {
+        try{    
+               
         nf = Integer.parseInt(txtNumerodeFilas.getText());
         nc = Integer.parseInt(txtNumerodeColumnas.getText());
-
+        
+        if (nf <4)
+        {
+           Helper.mensaje(this, "El numero de filas no puede ser menor a 4", 2);
+        }
+        else if (nc <4)
+        {
+            Helper.mensaje(this, "El numero de columnas no puede ser menor a 4 ", 2);
+        }
+        else if ( nc>=12)
+        {
+            Helper.mensaje(this, "El numero de columnas no puede ser mayor a 12 ", 2);
+        }
+        else if ( nf >=12 )
+        {
+           Helper.mensaje(this, "El numero de filas no puede mayor a 12", 2);
+        }
+        else {
         tm = (DefaultTableModel) tblTablaInicial.getModel();
         tm2 = (DefaultTableModel) tblTablaResultado.getModel();
 
@@ -252,6 +252,13 @@ public class Principal extends javax.swing.JFrame {
         
         Helper.habilitarBotones(botonesH);
         Helper.deshabilitarBotones(botonesD);
+        }
+        }catch (NumberFormatException e)
+        {
+           Helper.mensaje(this, "Ingrese un numero valido", 3);
+        }
+        }
+        
     }//GEN-LAST:event_cmdCrearActionPerformed
 
     private void cmdLlenadoAutomaticoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmdLlenadoAutomaticoActionPerformed
@@ -277,27 +284,142 @@ public class Principal extends javax.swing.JFrame {
     }//GEN-LAST:event_cmdLlenadoAutomaticoActionPerformed
 
     private void cmdOperacionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmdOperacionActionPerformed
-        int op, cantPares;
+        int op, nf, nc;
+        DefaultTableModel tm, tm2;
         op = cmbOperaciones.getSelectedIndex();
         Helper.limpiadoTabla(tblTablaResultado);
+        nf = Integer.parseInt(txtNumerodeFilas.getText());
+        nc = Integer.parseInt(txtNumerodeColumnas.getText());
+        tm = (DefaultTableModel) tblTablaInicial.getModel();
+        tm2 = (DefaultTableModel) tblTablaResultado.getModel();
+        tm.setRowCount(nf);
+        tm.setColumnCount(nc);
+        tm2.setRowCount(nf);
+        tm2.setColumnCount(nc);
         
         switch (op) {
             case 0:
-                cantPares = Helper.cantidadPares(tblTablaInicial);
-                txtResultado.setText("El número de elementos pares es: " + cantPares);
+                if (nf != nc)
+                {
+                    Helper.mensaje(this, "La matriz debe ser cuadrada para hallar la diagonal", 2);
+                }
+                else {
+                Helper.diagonalSecundaria(tblTablaInicial, tblTablaResultado);
+                }
                 break;
             case 1:
-                Helper.pares(tblTablaInicial, tblTablaResultado);
+                if (nf !=nc)
+                {
+                    Helper.mensaje(this, "La matriz debe ser cuadrada", 2);
+                }
+                else {
+                Helper.TriangularSuperior(tblTablaInicial, tblTablaResultado);
+                }
                 break;
             case 2:
-                Helper.letraC(tblTablaInicial, tblTablaResultado);
+                if (nf != nc)
+                {
+                  Helper.mensaje(this, "La matriz debe ser cuadrada", 2);
+                }
+                else{
+                Helper.triangularInferior(tblTablaInicial, tblTablaResultado);
+                }
                 break;
             case 3:
-                Helper.diagonalPrincipal(tblTablaInicial, tblTablaResultado);
+                Helper.MatrizTraspuesta(tblTablaInicial, tblTablaResultado);
                 break;
             case 4:
-                Helper.letraH(tblTablaInicial, tblTablaResultado);
+                if (nf %2 == 0){
+                    Helper.mensaje(this, "El numero de filas debe ser impar", 2);
+                }
+                else {
+                Helper.LetraA(tblTablaInicial, tblTablaResultado);
+                }
                 break;
+            case 5:
+                if (nf != nc){
+                    Helper.mensaje(this, "La matriz debe ser cuadrada", 2);
+                }
+                else {
+                Helper.letraZ(tblTablaInicial, tblTablaResultado);
+                }
+                break;
+            case 6:
+                if (nc % 2 == 0)
+                {
+                   Helper.mensaje(this, "El numero de columnas debe ser impar", op);
+                }
+                else {
+                Helper.letraT(tblTablaInicial, tblTablaResultado);
+                }
+                break;    
+            case 7:
+                if (nc != nf){
+                    Helper.mensaje(this, "La matriz debe ser cuadrada", 2);
+                }
+                Helper.letraV(tblTablaInicial, tblTablaResultado);
+                break; 
+            case 8:
+                if (nf % 2 == 0)
+                {
+                   Helper.mensaje(this, "El numero de filas debe ser impar", op);
+                }
+                else {
+                Helper.letraE(tblTablaInicial, tblTablaResultado);
+                }
+                break;
+            case 9:
+                if (nf % 2 == 0)
+                {
+                   Helper.mensaje(this, "El numero de filas debe ser impar", 2);
+                }
+                else {
+                Helper.letraF(tblTablaInicial, tblTablaResultado);
+                }
+                break;    
+            case 10:
+                Helper.letraP(tblTablaInicial, tblTablaResultado);
+                
+                break;    
+            case 11:
+                if (nc % 2 == 0){
+                    Helper.mensaje(this, "el numero de columnas debe ser impar", 2);
+                }
+                else if (nc>nc)
+                {
+                  Helper.mensaje(this, "El numero de columnas no puede ser mayor al de filas", 2);
+                }
+                else {
+                Helper.letraI(tblTablaInicial, tblTablaResultado);
+                }
+                break;    
+            case 12:
+                if (nc != nf)
+                {
+                  Helper.mensaje(this, "La matriz debe ser cuadrada", 2);
+                }
+                else{
+                Helper.letraN(tblTablaInicial, tblTablaResultado);
+                }
+                break;    
+            case 13:
+                if (nf != nc || (nf%2 == 0 && nc%2 == 0))
+                {
+                  Helper.mensaje(this, "El numero de columnas y filas debe ser impar y cuadradas", 2);
+                }
+                else{
+                Helper.letraY(tblTablaInicial, tblTablaResultado);
+                }
+                break;    
+            case 14:
+                if (nc != nf)
+                {
+                  Helper.mensaje(this, "La matriz debe ser cuadrada", 2);
+                }
+                else{
+                Helper.letraX(tblTablaInicial, tblTablaResultado);
+                }
+                break;    
         }
         
         JButton botonesH[]={cmdOperacion,cmdLimpiar};
@@ -314,7 +436,6 @@ public class Principal extends javax.swing.JFrame {
         txtNumerodeColumnas.setText("");
         txtNumerodeFilas.requestFocusInWindow();
         cmbOperaciones.setSelectedIndex(0);
-        txtResultado.setText("");
 
        Helper.porDefectoTabla(tblTablaInicial);
        Helper.porDefectoTabla(tblTablaResultado);
@@ -411,8 +532,6 @@ public class Principal extends javax.swing.JFrame {
     private javax.swing.JButton cmdLlenadoManual;
     private javax.swing.JButton cmdOperacion;
     private javax.swing.JLabel jLabel1;
-    private javax.swing.JLabel jLabel10;
-    private javax.swing.JLabel jLabel11;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
@@ -424,8 +543,6 @@ public class Principal extends javax.swing.JFrame {
     private javax.swing.JPanel jPanel3;
     private javax.swing.JPanel jPanel4;
     private javax.swing.JPanel jPanel5;
-    private javax.swing.JPanel jPanel6;
-    private javax.swing.JPanel jPanel7;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JTable tblTablaInicial;
@@ -433,11 +550,8 @@ public class Principal extends javax.swing.JFrame {
     private javax.swing.JTextField txtNumerodeColumnas;
     private javax.swing.JTextField txtNumerodeColumnas1;
     private javax.swing.JTextField txtNumerodeColumnas3;
-    private javax.swing.JTextField txtNumerodeColumnas4;
     private javax.swing.JTextField txtNumerodeFilas;
     private javax.swing.JTextField txtNumerodeFilas1;
     private javax.swing.JTextField txtNumerodeFilas3;
-    private javax.swing.JTextField txtNumerodeFilas4;
-    private javax.swing.JTextField txtResultado;
     // End of variables declaration//GEN-END:variables
 }
